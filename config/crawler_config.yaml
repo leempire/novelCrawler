@@ -1,0 +1,11 @@
+headers:
+  User-Agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+sites:
+  https://m.bqg9527.cc:
+    extract_chapters_selector:
+      chapter_list: "/html/body/div[2]/ul[2]/li/a"
+      chapter_name: "string(./text())"
+      url: "concat('https://m.bqg9527.cc',./@href)"
+    extract_text_selector:
+      title: "//*[@id='nr_title']/text()"
+      text: "//*[@id='nr']/*/text()"
