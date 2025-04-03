@@ -7,12 +7,13 @@ import threading
 class Checkpoint:
     dir_name = 'data'
 
-    def __init__(self):
+    def __init__(self, show_info=True):
         self.bookname = None
         self.remain = []
         self.working = []
         self.error = []
         self.lock = threading.Lock()
+        self.show_info = show_info
 
     def get_info(self):
         return len(self.remain), len(self.working), len(self.error)
@@ -55,6 +56,9 @@ class Checkpoint:
         }
         with open(checkpoint_path, 'w', encoding='utf-8') as f:
             json.dump(checkpoint, f, ensure_ascii=False, indent=4)
+
+        if self.show_info:
+            print('\rcheckpoint saved! remain:{:<4} working:{:<4} error:{:<4}'.format(len(self.remain), len(self.working), len(self.error)), end=' ')
 
     def load_checkpoint(self, reset_error=True):
         """加载检查点"""

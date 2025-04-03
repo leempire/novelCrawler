@@ -48,8 +48,7 @@ class Main:
                 self.checkpoint.remove_from_working(chapter)
             else:  # 爬取失败
                 self.checkpoint.move_to_error(chapter)
-            remain, working, error = self.checkpoint.get_info()
-            print('remain:{} working:{} error:{}'.format(remain, working, error))
+                
             self.checkpoint.save_checkpoint()
 
             time.sleep(random.uniform(0.1, 1))
