@@ -1,4 +1,13 @@
 import os
+import requests
+from lxml import etree
+
+
+def get_tree(url, headers=None):
+    response = requests.get(url, headers=headers, timeout=10)
+    response.encoding = response.apparent_encoding
+    return etree.HTML(response.text)
+
 
 def merge(bookname):
     chapters = []

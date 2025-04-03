@@ -1,14 +1,6 @@
-import requests
-import yaml
-from lxml import etree
+from .tools import get_tree
 from urllib.parse import urlparse
-from urllib.parse import urljoin
-
-
-def get_tree(url, headers):
-    response = requests.get(url, headers=headers, timeout=10)
-    response.encoding = response.apparent_encoding
-    return etree.HTML(response.text)
+from .config_manager import ConfigManager
 
 
 def get_site_name(url):
@@ -19,18 +11,14 @@ def get_site_name(url):
 class Crawler:
     def __init__(self):
         self.site_name = None
-        # 从配置文件中读取全局 headers 信息
-        self.headers = None
+        self.config_manager = ConfigManager()
+        self.headers = self.config_manager.get_headers()
 
     def load_config(self, site_name):
-        with open('config/crawler_config.yaml', 'r', encoding='utf-8') as f:
-            config = yaml.safe_load(f)
-        site_config = config.get('sites', {}).get(site_name)
+        site_config = self.config_manager.get_site_config(site_name)
         if not site_config:
             raise ValueError(f"未找到 {site_name} 的配置信息。")
-        
-        # 加载到属性
-        self.headers = config.get('headers', {})
+        self.headers = self.config_manager.get_headers()
         self.site_name = site_name
         self.site_config = site_config
 
@@ -71,4 +59,3 @@ class Crawler:
         text = tree.xpath(self.site_config['extract_text_selector']['text'])
         text = '\n'.join(text)
         return title.strip(), text.strip()
-    
